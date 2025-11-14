@@ -1,13 +1,13 @@
-name: Playwright Tests
-on:
-  push:
-    branches: [ main, master ]
+name: Playwright Tests  //Đặt tên cho workflow của mình là gì 
+on: //Xác định các sự kiện hay những event mà mình sẽ kích hoạt cái wokflow của mình
+  push: //event push 
+    branches: [ main, master ] //Nếu bắt được những event push  nào nó push lên cái branch là branch main hoặc branch master thì nó sẽ thực chạy cái workflow cho mình 
   pull_request:
-    branches: [ main, master ]
-jobs:
+    branches: [ main, master ] //Những PR nào mà nhắm tới nhánh main & nhánh master thì nó cũng sẽ thực hiện chạy những cái workflow đó 
+jobs: //Định nghĩa các job mà workflow sẽ thực hiện  => heienj tại có 1 job là job tests
   test:
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
+    timeout-minutes: 60 //1 job chạy tối đa 60ms
+    runs-on: ubuntu-latest //Job chạy trên con máy gì 
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
