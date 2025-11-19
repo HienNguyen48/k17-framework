@@ -1,25 +1,32 @@
-name: Playwright Tests  //Đặt tên cho workflow của mình là gì 
-on: //Xác định các sự kiện hay những event mà mình sẽ kích hoạt cái wokflow của mình
-  push: //event push => run, kick hoạt được cái workflow của mình 
-    branches: [ main, master ] //Bắt được những push nào ở branches: [ main, master ] thì nó sẽ thực chạy cái workflow cho mình 
+name: Playwright Tests                           #Đặt tên cho workflow của mình là gì 
+
+on:                                              #Xác định các sự kiện hay những event mà mình sẽ kích hoạt cái wokflow của mình
+  push:                                          #event push => run, kick hoạt được cái workflow của mình 
+    branches: [ main, master ]                   #Bắt được những push nào ở branches: [ main, master ] thì nó sẽ thực chạy cái workflow cho mình 
   pull_request:
-    branches: [ main, master ] //Những PR nào mà nhắm tới nhánh branches: [ main, master ] thì nó cũng sẽ thực hiện chạy những cái workflow đó 
-jobs: //Định nghĩa các job mà workflow sẽ thực hiện  => heienj tại có 1 job là job tests
-  test: //Tạo thêm được nhiều job liên quan ở bên dưới 
-    timeout-minutes: 60 //1 job chạy tối đa 60ms, nếu chạy quá nó báo timeout
-    runs-on: ubuntu-latest //Job chạy trên con máy gì, vd như cái này job chạy trên máy ảo hệ điều hành ubuntu mới nhất 
+    branches: [ main, master ]                   #Những PR nào mà nhắm tới nhánh branches: [ main, master ] thì nó cũng sẽ thực hiện chạy những cái workflow đó 
+
+jobs:                                            #Định nghĩa các job mà workflow sẽ thực hiện  => hiện  tại có 1 job là job tests
+  test:                                          #Tạo thêm được nhiều job liên quan ở bên dưới 
+    timeout-minutes: 60                          #1 job chạy tối đa 60ms, nếu chạy quá nó báo timeout
+    runs-on: ubuntu-latest                       #Job chạy trên con máy gì, vd như cái này job chạy trên máy ảo hệ điều hành ubuntu mới nhất 
+
     steps:
-    - uses: actions/checkout@v4 //checkout về những nhánh code mà mình mong muốn. VD như checkout về main 
-    - uses: actions/setup-node@v4 //ài đặt nodejs mới nhất 
+    - uses: actions/checkout@v4                  #checkout về những nhánh code mà mình mong muốn. VD như checkout về main 
+    - uses: actions/setup-node@v4                #Cài đặt nodejs mới nhất 
       with:
         node-version: lts/*
+
     - name: Install dependencies
-      run: npm ci // cài đặt những thư viện trên ci mà cần thiết 
+      run: npm install                            #cài đặt những thư viện trên ci mà cần thiết (//npm ci)
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-    - name: Run Playwright tests //run toàn bộ playwright test nếu như có event "on" bên trên 
-      run: npx playwright test //Nếu muốn run theo từng smoke test thì config theo cái flag để nó sẽ chạy những case smoke test hoặc các case regression test thì sẽ config thêm flag vào trong này
-    - uses: actions/upload-artifact@v4 //upload các file trace, video vào trong này 
+
+    - name: Run Playwright tests                   #run toàn bộ playwright test nếu như có event "on" bên trên 
+      run: npx playwright test --reporter=html     #Nếu muốn run theo từng smoke test thì config theo cái flag để nó sẽ chạy những case smoke test hoặc các case regression test thì sẽ config thêm flag vào trong này
+    
+    - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
         name: playwright-report
